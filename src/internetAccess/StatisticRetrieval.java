@@ -5,10 +5,12 @@
 package internetAccess;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 import other.Variables;
 
 public class StatisticRetrieval {
+	
 	private String givenWebsiteSource;
 	
 	public StatisticRetrieval() {
@@ -48,6 +50,9 @@ public class StatisticRetrieval {
 		Variables.playerCritFortitude = RetrievePlayerCritFortitude();
 		Variables.playerSpellResist = RetrievePlayerSpellResist();
 		Variables.playerSpellFortitude = RetrievePlayerSpellFortitude();
+
+		// Player Abyss Statistics
+		
 	}
 	
 	public void ResetAllPlayerStats() throws IOException {
@@ -79,107 +84,63 @@ public class StatisticRetrieval {
 		Variables.playerCritFortitude = "";
 		Variables.playerSpellResist = "";
 		Variables.playerSpellFortitude = "";
+		
+		// Player Abyss Statistics
+		
 	}
 	
 	public String RetrievePlayerSpellFortitude() throws IOException {
-		String spellFortitudeResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Spell Fortitude</th>") + 36, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Spell Fortitude</th>")));
+		String spellFortitudeResult = fixString("<th colspan=\"2\">Spell Fortitude</th>", "</td>", "<th colspan=\"2\">Spell Fortitude</th>");
 
-		spellFortitudeResult = spellFortitudeResult.replaceAll("<td colspan=\"2\">", "");
-		spellFortitudeResult = FixSpaces(spellFortitudeResult);
-		
-		return spellFortitudeResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(spellFortitudeResult));
 	}
 	
 	public String RetrievePlayerSpellResist() throws IOException {
-		String spellResistResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Spell Resist</th>") + 33, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Spell Resist</th>")));
+		String spellResistResult = fixString("<th colspan=\"2\">Spell Resist</th>", "</td>", "<th colspan=\"2\">Spell Resist</th>");
 
-		spellResistResult = spellResistResult.replaceAll("<td colspan=\"2\">", "");
-		spellResistResult = FixSpaces(spellResistResult);
-		
-		return spellResistResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(spellResistResult));
 	}
 	
 	public String RetrievePlayerCritFortitude() throws IOException {
-		String critFortitudeResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Crit Fortitude</th>") + 35, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Crit Fortitude</th>")));
+		String critFortitudeResult = fixString("<th colspan=\"2\">Crit Fortitude</th>", "</td>", "<th colspan=\"2\">Crit Fortitude</th>");
 
-		critFortitudeResult = critFortitudeResult.replaceAll("<td colspan=\"2\">", "");
-		critFortitudeResult = FixSpaces(critFortitudeResult);
-		
-		return critFortitudeResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(critFortitudeResult));
 	}
 	
 	public String RetrievePlayerCritResist() throws IOException {
-		String critResistResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Crit Resist</th>") + 32, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Crit Resist</th>")));
+		String critResistResult = fixString("<th colspan=\"2\">Crit Resist</th>", "</td>", "<th colspan=\"2\">Crit Resist</th>");
 
-		critResistResult = critResistResult.replaceAll("<td colspan=\"2\">", "");
-		critResistResult = FixSpaces(critResistResult);
-		
-		return critResistResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(critResistResult));
 	}
 	
 	public String RetrievePlayerCritSpell() throws IOException {
-		String critSpellResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Crit Spell</th>") + 31, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Crit Spell</th>")));
-
-		critSpellResult = critSpellResult.replaceAll("<td colspan=\"2\">", "");
-		critSpellResult = critSpellResult.replaceAll(" ", "");
-		critSpellResult = critSpellResult.replace("\u0009", ""); // \u2202 is unicode for the Tab button/character
+		String critSpellResult = fixString("<th colspan=\"2\">Crit Spell</th>", "</td>", "<th colspan=\"2\">Crit Spell</th>");
 		
-		return critSpellResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(critSpellResult));
 	}
 	
 	public String RetrievePlayerEvasion() throws IOException {
-		String evasionResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Evasion</th>") + 28, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Evasion</th>")));
-
-		evasionResult = evasionResult.replaceAll("<td colspan=\"2\">", "");
-		evasionResult = FixSpaces(evasionResult);
+		String evasionResult = fixString("<th colspan=\"2\">Evasion</th>", "</td>", "<th colspan=\"2\">Evasion</th>");
 		
-		return evasionResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(evasionResult));
 	}
 	
 	public String RetrievePlayerParry() throws IOException {
-		String parryResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Parry</th>") + 26, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Parry</th>")));
-
-		parryResult = parryResult.replaceAll("<td colspan=\"2\">", "");
-		parryResult = FixSpaces(parryResult);
+		String parryResult = fixString("<th colspan=\"2\">Parry</th>", "</td>", "<th colspan=\"2\">Parry</th>");
 		
-		return parryResult.replaceAll("\\(", " \\(");
-	}
-	
-	public String RetrievePlayerPhysicalDefence() throws IOException {
-		String physicalDefenceResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Physical Def</th>") + 33, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Physical Def</th>")));
-
-		physicalDefenceResult = physicalDefenceResult.replaceAll("<td colspan=\"2\">", "");
-		physicalDefenceResult = FixSpaces(physicalDefenceResult);
-		
-		return physicalDefenceResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(parryResult));
 	}
 	
 	public String RetrievePlayerBlock() throws IOException {
-		String blockResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Block</th>") + 26, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Block</th>")));
+		String blockResult = fixString("<th colspan=\"2\">Block</th>", "</td>", "<th colspan=\"2\">Block</th>");
 		
-		blockResult = blockResult.replaceAll("<td colspan=\"2\">", "");
-		blockResult = FixSpaces(blockResult);
-		
-		return blockResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(blockResult));
 	}
 	
-	public String RetrievePlayerHealBoost() throws IOException {
-		String healBoostResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Healing Boost</th>") + 34, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Healing Boost</th>")));
+	public String RetrievePlayerPhysicalDefence() throws IOException {
+		String physicalDefenceResult = fixString("<th colspan=\"2\">Physical Def</th>", "</td>", "<th colspan=\"2\">Physical Def</th>");
 		
-		healBoostResult = healBoostResult.replaceAll("<td colspan=\"2\">", "");
-		healBoostResult = FixSpaces(healBoostResult);
-		
-		return healBoostResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(physicalDefenceResult));
 	}
 	
 	public String RetrievePlayerCastSpeed() throws IOException {
@@ -187,39 +148,33 @@ public class StatisticRetrieval {
 				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Casting Speed</th>")));
 
 		castSpeedResult = castSpeedResult.replaceAll("<td colspan=\"2\">", "");
-		castSpeedResult = FixSpaces(castSpeedResult);
+		castSpeedResult = fixSpaces(castSpeedResult);
 		
 		return String.format("(+%.2f)", Float.parseFloat(castSpeedResult));
 	}
 	
-	public String RetrievePlayerMagicBoost() throws IOException {
-		String magicBoostResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Magic Boost</th>") + 32, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Magic Boost</th>")));
+	public String RetrievePlayerHealBoost() throws IOException {
+		String healBoostResult = fixString("<th colspan=\"2\">Healing Boost</th>", "</td>", "<th colspan=\"2\">Healing Boost</th>");
 		
-		magicBoostResult = magicBoostResult.replaceAll("<td colspan=\"2\">", "");
-		magicBoostResult = FixSpaces(magicBoostResult);
-		
-		return magicBoostResult.replaceAll("\\(", " \\(");
-	}
-	
-	public String RetrievePlayerMagicAccuracy() throws IOException {
-		String magicAccuracyResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Magical Accuracy</th>") + 37, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Magical Accuracy</th>")));
-		
-		magicAccuracyResult = magicAccuracyResult.replaceAll("<td colspan=\"2\">", "");
-		magicAccuracyResult = FixSpaces(magicAccuracyResult);
-		
-		return magicAccuracyResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(healBoostResult));
 	}
 	
 	public String RetrievePlayerMagicResist() throws IOException {
-		String magicResistResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Magic Resist</th>") + 33, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Magic Resist</th>")));
+		String magicResistResult = fixString("<th colspan=\"2\">Magic Resist</th>", "</td>", "<th colspan=\"2\">Magic Resist</th>");
 		
-		magicResistResult = magicResistResult.replaceAll("<td colspan=\"2\">", "");
-		magicResistResult = FixSpaces(magicResistResult);
+		return fixSpaces(completeFormatting(magicResistResult));
+	}
+	
+	public String RetrievePlayerMagicAccuracy() throws IOException {
+		String magicAccuracyResult = fixString("<th colspan=\"2\">Magical Accuracy</th>", "</td>", "<th colspan=\"2\">Magical Accuracy</th>");
 		
-		return magicResistResult.replaceAll("\\(", " \\(");
+		return fixSpaces(completeFormatting(magicAccuracyResult));
+	}
+	
+	public String RetrievePlayerMagicBoost() throws IOException {
+		String magicBoostResult = fixString("<th colspan=\"2\">Magic Boost</th>", "</td>", "<th colspan=\"2\">Magic Boost</th>");
+		
+		return fixSpaces(completeFormatting(magicBoostResult));
 	}
 	
 	public String RetrievePlayerMovementSpeed() throws IOException {
@@ -227,7 +182,7 @@ public class StatisticRetrieval {
 				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Speed</th>")));
 
 		movementSpeedResult = movementSpeedResult.replaceAll("<td colspan=\"2\">", "");
-		movementSpeedResult = FixSpaces(movementSpeedResult);
+		movementSpeedResult = fixSpaces(movementSpeedResult);
 		
 		String[] movementSpeedResultArray = movementSpeedResult.split("\\(\\+");
 		if(movementSpeedResultArray.length > 1) {
@@ -239,20 +194,13 @@ public class StatisticRetrieval {
 	}
 	
 	public String RetrievePlayerAttackSpeed() throws IOException {
-		String attackSpeedResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th colspan=\"2\">Atk Speed</th>") + 30, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th colspan=\"2\">Atk Speed</th>")));
-
-		attackSpeedResult = attackSpeedResult.replaceAll("<td colspan=\"2\">", "");
-		attackSpeedResult = FixSpaces(attackSpeedResult);
+		String attackSpeedResult = fixString("<th colspan=\"2\">Atk Speed</th>", "</td>", "<th colspan=\"2\">Atk Speed</th>");
 		
-		return attackSpeedResult;
+		return fixSpaces(completeFormatting(attackSpeedResult));
 	}
 	
 	public String RetrievePlayerName() throws IOException {
-		String nameResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("</em>") + 6, 
-				givenWebsiteSource.indexOf("</span>", givenWebsiteSource.indexOf("<em>")));
-		
-		return nameResult;
+		return fixString("</em>", "</span>", "<em>");
 	}
 	
 	public String RetrievePlayerLevel() throws IOException {
@@ -277,59 +225,51 @@ public class StatisticRetrieval {
 	}
 	
 	public String RetrievePlayerMHAttack() throws IOException {
-		String mainHandAttackResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th>Attack</th>") + 15, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th>Attack</th>")));
-		
+		String mainHandAttackResult = fixString("<th>Attack</th>", "</td>", "<th>Attack</th>");
 		mainHandAttackResult = mainHandAttackResult.replaceAll("<td class=\"bRight\">", "");
 		
-		return FixTabs(mainHandAttackResult);
+		return fixSpaces(completeFormatting(mainHandAttackResult));
 	}
 	
 	public String RetrievePlayerOHAttack() throws IOException {
-		String offHandAttackResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th>Attack</th>") + 15, 
-				givenWebsiteSource.indexOf("<tr class=", givenWebsiteSource.indexOf("<th>Attack</th>")));
-		
+		String offHandAttackResult = fixString("<th>Attack</th>", "<tr class=", "<th>Attack</th>");
+
 		offHandAttackResult = offHandAttackResult.substring(offHandAttackResult.indexOf("<td>") + 4, 
 				offHandAttackResult.indexOf(("</td>"), offHandAttackResult.indexOf("<th>Attack</th>")));
-
-		return FixTabs(offHandAttackResult);
+		
+		return fixSpaces(completeFormatting(offHandAttackResult));
 	}
 	
 	public String RetrievePlayerMHAccuracy() throws IOException {
-		String mainHandAccuracyResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th>Accuracy</th>") + 17, 
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th>Accuracy</th>")));
-		
+		String mainHandAccuracyResult = fixString("<th>Accuracy</th>", "</td>", "<th>Accuracy</th>");
 		mainHandAccuracyResult = mainHandAccuracyResult.replaceAll("<td class=\"bRight\">", "");
 		
-		return FixTabs(mainHandAccuracyResult);
+		return fixSpaces(completeFormatting(mainHandAccuracyResult));
 	}
 	
 	public String RetrievePlayerOHAccuracy() throws IOException {
-		String offHandAccuracyResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th>Accuracy</th>") + 17, 
-				givenWebsiteSource.indexOf("<tr class=", givenWebsiteSource.indexOf("<th>Accuracy</th>")));
+		String offHandAccuracyResult = fixString("<th>Accuracy</th>", "<tr class=", "<th>Accuracy</th>");
+
+		offHandAccuracyResult = offHandAccuracyResult.substring(offHandAccuracyResult.indexOf("<td>") + 4, 
+				offHandAccuracyResult.indexOf(("</td>"), offHandAccuracyResult.indexOf("<th>Accuracy</th>")));
 		
-		offHandAccuracyResult = offHandAccuracyResult.substring(offHandAccuracyResult.indexOf("<td>") + 4, offHandAccuracyResult.indexOf(("</td>"), offHandAccuracyResult.indexOf("<th>Accuracy</th>")));
-		
-		return FixTabs(offHandAccuracyResult);
+		return fixSpaces(completeFormatting(offHandAccuracyResult));
 	}
 	
 	public String RetrievePlayerMHCritStrike() throws IOException {
-		String mainHandCritStrikeResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th>Crit Strike</th>") + 20,
-				givenWebsiteSource.indexOf("</td>", givenWebsiteSource.indexOf("<th>Crit Strike</th>")));
-		
+		String mainHandCritStrikeResult = fixString("<th>Crit Strike</th>", "</td>", "<th>Crit Strike</th>");
 		mainHandCritStrikeResult = mainHandCritStrikeResult.replaceAll("<td class=\"bRight\">", "");
 		
-		return FixTabs(mainHandCritStrikeResult);
+		return fixSpaces(completeFormatting(mainHandCritStrikeResult));
 	}
 	
 	public String RetrievePlayerOHCritStrike() throws IOException {
-		String offHandCritStrikeResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf("<th>Crit Strike</th>") + 20, 
-				givenWebsiteSource.indexOf("</tr>", givenWebsiteSource.indexOf("<th>Crit Strike</th>") + 20));
+		String offHandCritStrikeResult = fixString("<th>Crit Strike</th>", "</tr>", "<th>Crit Strike</th>");
+
+		offHandCritStrikeResult = offHandCritStrikeResult.substring(offHandCritStrikeResult.indexOf("<td>") + 4, 
+				offHandCritStrikeResult.indexOf(("</td>"), offHandCritStrikeResult.indexOf("<th>Crit Strike</th>")));
 		
-		offHandCritStrikeResult = offHandCritStrikeResult.replace("\u0009", ""); // \u2202 is unicode for the Tab button/character
-		offHandCritStrikeResult = offHandCritStrikeResult.substring(offHandCritStrikeResult.indexOf("<td>") + 4, offHandCritStrikeResult.indexOf(("</td>"), offHandCritStrikeResult.indexOf("<th>Crit Strike</th>")));
-		
-		return offHandCritStrikeResult;
+		return fixSpaces(completeFormatting(offHandCritStrikeResult));
 	}
 	
 	public String RetrievePlayerRace() {
@@ -421,20 +361,41 @@ public class StatisticRetrieval {
 	 * Other methods to fix returning statistic
 	 */
 	
-	@SuppressWarnings("unused")
-	private String RemoveTabCharacter(String givenText) {
+	private String removeTabCharacter(String givenText) {
 		//TODO Remove unicode tab character from given text then return.
 		return "";
 	}
 	
-	private String FixTabs(String givenText) {
-		givenText = givenText.replace("\u0009", ""); // \u2202 is unicode for the Tab button/character
+	private String fixTabs(String givenText) {
+		givenText = givenText.replace("\u0009", "");
 		return givenText;
 	}
 	
-	private String FixSpaces(String givenText) {
+	private String fixSpaces(String givenText) {
 		givenText = givenText.replaceAll(" ", "");
-		givenText = givenText.replace("\u0009", ""); // \u2202 is unicode for the Tab button/character
+		givenText = givenText.replace("\u0009", "");
 		return givenText;
+	}
+	
+	private String completeFormatting(String givenString) {
+		DecimalFormat formatter = new DecimalFormat("#,###");
+		
+		// Ignore this disgusting tree, it's comprehensible to me.
+		return formatter.format(
+					Double.parseDouble(
+						fixParenthesis(fixSpaces(givenString.replaceAll("<td colspan=\"2\">", ""))).replaceAll("\\(.*?\\)", "")
+					)
+				).toString();
+		//return fixParenthesis(fixSpaces(givenString.replaceAll("<td colspan=\"2\">", ""))).replaceAll("\\(.*?\\)", "");
+	}
+	
+	private String fixString(String arg0, String arg1, String arg2) {
+		String createdResult = givenWebsiteSource.substring(givenWebsiteSource.indexOf(arg0) + arg0.length(), 
+				givenWebsiteSource.indexOf(arg1, givenWebsiteSource.indexOf(arg2)));
+		return createdResult;
+	}
+	
+	private String fixParenthesis(String givenText) {
+		return givenText.replaceAll("\\(", " \\(");
 	}
 }

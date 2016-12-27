@@ -20,26 +20,28 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import internetAccess.StatisticRetrieval;
+import other.ConfirmButtonThread;
 import other.Variables;
 
 @SuppressWarnings("serial")
 public class MainJFrame extends JFrame {
+	// Variables
+	int labelLocX = 3;
+	int labelLocY = 12;
+	int labelWidth = 39;
+	int labelHeight = 14;
+	
 	JFrame mainFrame;
 	JTextField pNameTF, pServerTF, pLegionTF;
 	JTextArea textArea;
+	Label pNameLabel, pServerLabel, pLegionLabel;
 	
 	public void JFrame() {
 		
-		// Variables
-		int labelLocX = 3;
-		int labelLocY = 12;
-		int labelWidth = 39;
-		int labelHeight = 14;
-		
 		// Initialize/create basic frame components
-		Label pNameLabel = null;
-		Label pServerLabel = null;
-		Label pLegionLabel = null;
+		pNameLabel = null;
+		pServerLabel = null;
+		pLegionLabel = null;
 		pNameTF = new JTextField();
 		pServerTF = new JTextField();
 		pLegionTF = new JTextField();
@@ -55,12 +57,43 @@ public class MainJFrame extends JFrame {
 	    mainFrame.getContentPane().setBackground(Variables.frameBackgroundColor);
 	    BackgroundJPanel panel = new BackgroundJPanel();
 
+	    // Allows the frame mainFrame to be dragged
         FrameDragListener frameDragListener = new FrameDragListener(mainFrame);
         mainFrame.addMouseListener(frameDragListener);
         mainFrame.addMouseMotionListener(frameDragListener);
         
-        
-	    // Player Name
+        // Creates input labels/text boxes
+        createInputArea();
+
+	    // System output console
+	    createTextArea(textArea, labelLocX, Variables.frameHeight - 90, 288, 87); // Magic numbers, because fuck you.
+	    
+	    // Frame handler buttons
+		createMinimizeButton(Variables.frameWidth - 80, 0, 30, 20);
+	    createCloseButton(Variables.frameWidth - 40, 0, 30, 20);
+	    
+	    // Confirm Button
+	    confirmButtonHandler(labelLocX * 65, ((labelLocY * 3) - 2) + 15, 70, 20);
+	    
+	    mainFrame.add(panel);
+	    mainFrame.setVisible(true);
+	    pNameTF.requestFocus(); // Sets focus to the name box
+	    
+	    checkVersion();
+	}
+
+	private void checkVersion() {
+		if(internetAccess.Internet.checkVersion().equals(Variables.versionString)) {
+			System.out.print("Your version is the most recent. ");
+		} else {
+			System.out.print("You have an out of date verion."
+					+ "\nCurrent version: " + Variables.versionString
+					+ "\nRecent version: " + internetAccess.Internet.checkVersion());
+		}
+	}
+
+	private void createInputArea() {
+		// Player Name
 	    createLabel(pNameLabel, "Player", labelLocX, (labelLocY * 1) + 15, labelWidth, labelHeight);
 	    createTextBox(pNameTF, "", 48, 10 + 15, 100, 20);
 	    
@@ -71,34 +104,6 @@ public class MainJFrame extends JFrame {
 	    // Player Legion
 	    createLabel(pLegionLabel, "Legion", labelLocX, (labelLocY * 3) + 15, labelWidth, labelHeight);
 	    createTextBox(pLegionTF, "", 48, ((labelLocY * 3) - 2) + 15, 100, 20);
-
-	    // System output console
-	    createTextArea(textArea, labelLocX, Variables.frameHeight - 90, 288, 87); // Magic numbers, because fuck you.
-	    
-	    // Frame handler buttons
-	    setFrameButtonLAF(0); // Sets the Look And Feel to look flat
-		createMinimizeButton(Variables.frameWidth - 80, 0, 30, 20);
-	    createCloseButton(Variables.frameWidth - 40, 0, 30, 20);
-	    setFrameButtonLAF(3); // Sets the Look And Feel to look similar to windows
-	    
-	    // Confirm Button
-	    confirmButtonHandler(labelLocX * 65, ((labelLocY * 3) - 2) + 15, 70, 20);
-
-	    // Frame handler buttons
-	    //createMinimizeButton(Variables.frameWidth - 80, 0, 30, 20);
-	    //createCloseButton(Variables.frameWidth - 40, 0, 30, 20);
-	    
-	    mainFrame.add(panel);
-	    mainFrame.setVisible(true);
-	    pNameTF.requestFocus(); // Sets focus to the name box
-	    
-		if(internetAccess.Internet.checkVersion().equals(Variables.versionString)) {
-			System.out.print("Your version is the most recent. ");
-		} else {
-			System.out.print("You have an out of date verion."
-					+ "\nCurrent version: " + Variables.versionString
-					+ "\nRecent version: " + internetAccess.Internet.checkVersion());
-		}
 	}
 
 	private void setFrameButtonLAF(int num) {
@@ -106,12 +111,12 @@ public class MainJFrame extends JFrame {
 			UIManager.setLookAndFeel(UIManager.getInstalledLookAndFeels()[num].getClassName());
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
 				| UnsupportedLookAndFeelException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private void createMinimizeButton(int x1, int y1, int x2, int y2) {
+	    setFrameButtonLAF(0); // Sets the Look And Feel to look flat
 		JButton jButton = new JButton("\u2014");
 		jButton.setBorder(null);
 		jButton.setFocusable(false);
@@ -145,9 +150,10 @@ public class MainJFrame extends JFrame {
 			}
 		});
 		
-		
+
 	    mainFrame.add(jButton);
 	    jButton.setBounds(x1, y1, x2, y2);
+	    setFrameButtonLAF(3); // Sets the Look And Feel to look similar to windows
 	}
 
 	private void confirmButtonHandler(int x1, int y1, int x2, int y2) {
@@ -155,55 +161,14 @@ public class MainJFrame extends JFrame {
 		confirmButton.setFocusable(false);
 	    confirmButton.addActionListener(new ActionListener() {
 	    	public void actionPerformed(ActionEvent e) {
-				String mainWebsite;
-				String totalWords = pLegionTF.getText() + " " + pNameTF.getText() + " " + pServerTF.getText();
-				boolean hasNonAlpha = totalWords.matches("^.*[^a-zA-Z ].*$");
-				
-				if(!hasNonAlpha) {
-					System.out.print("Searching, please wait. ");
-					try {
-						mainWebsite = internetAccess.Internet.GoogleSearch(pLegionTF.getText(), pNameTF.getText(), pServerTF.getText());
-						resetTextArea("");
-						if(mainWebsite != null && mainWebsite.toLowerCase().contains("http")) {
-							if(mainWebsite.toLowerCase().contains("aiononline")) {
-								if(mainWebsite.toLowerCase().contains("guildid")) {
-									pageFromGuildID(pNameTF.getText(), mainWebsite);
-								} else if(mainWebsite.toLowerCase().contains("charid")) {
-									pageFromCharID(mainWebsite);
-								} else {
-									System.out.print("We've found an aiononline page, but it's not a legion or character page. "
-											+ "Please enter more accurate information.");
-								}
-								System.out.print("\nPlayer URL: " + Variables.finalCharacterURL);
-							} else {
-								resetTextArea("We've found a page, but it wasn't for aion. "
-										+ "Please enter more accurate information.");
-							}
-						} else {
-							new internetAccess.StatisticRetrieval().ResetAllPlayerStats();
-							resetTextArea("We couldn't find a proper website. "
-									+ "Please enter more accurate information.");
-						}
-					} catch (IOException e1) {
-						try {
-							new internetAccess.StatisticRetrieval().ResetAllPlayerStats();
-						} catch (IOException e2) {
-							e2.printStackTrace();
-						};
-						resetTextArea("Something internally broke.  Please tell the developer. ");
-						e1.printStackTrace();
-					}
-				} else {
-					try {
-						new internetAccess.StatisticRetrieval().ResetAllPlayerStats();
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					};
-					resetTextArea("Please remove any characters that are not alphabetical. "
-					    + "Numeric and special characters are not allowed.");
-				}
-				Variables.finalCharacterURL = null;
-				mainFrame.repaint();
+	    		if(!Variables.alreadySearching) {
+	    			Variables.alreadySearching = true;
+	    			ConfirmButtonThread t1 = new ConfirmButtonThread(mainFrame, textArea, pNameTF, pLegionTF, pServerTF);
+	    			resetTextArea("");
+	            	t1.start();
+	    		} else {
+	    			resetTextArea("You are already searching, please wait.");
+	    		}
 		    }
 	    });
 	    
@@ -225,7 +190,6 @@ public class MainJFrame extends JFrame {
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
-		//mainFrame.repaint();
 	}
 
 	protected void pageFromGuildID(String givenName, String givenWebsiteURL) {
