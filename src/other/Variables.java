@@ -8,7 +8,7 @@ import java.awt.Color;
 
 public class Variables {
 	// Program Variables
-	public static String versionString = "1.0";
+	public static String versionString = "1.1";
 	public static boolean alreadySearching = false;
 	
 	// User Input Variables
