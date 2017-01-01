@@ -98,19 +98,19 @@ public class Internet {
 	public static String checkVersion() {
 		URL versionURL;
 		try {
-			versionURL = new URL("http://pastebin.com/raw/0kAN4sC6");
+			versionURL = new URL("https://raw.githubusercontent.com/lmfaoown/AionStatFind/master/Version");
 	        BufferedReader in = new BufferedReader(
 	                new InputStreamReader(versionURL.openStream()));
 
 	                String inputLine;
 	                while ((inputLine = in.readLine()) != null) {
-	                    return inputLine;
+	                	return inputLine;
 	                }
 	                in.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return "0.0";
+		return "Error checking for version.  Do you have internet?";
 	}
 	
 	private static int FindMaxNum(String searchForString, String searchWithString) {

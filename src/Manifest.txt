@@ -1,5 +1,5 @@
 permissions: all-permissions
 Main-Class: AionStatFind
 Specification-Title: "Aion Statistic Finder" 
-Specification-Version: "1.0"
+Specification-Version: "1.1"
 Specification-Vendor: "Pillows-SL".

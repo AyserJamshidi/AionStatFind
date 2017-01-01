@@ -361,7 +361,7 @@ public class StatisticRetrieval {
 	 * Other methods to fix returning statistic
 	 */
 	
-	private String removeTabCharacter(String givenText) {
+	/*private String removeTabCharacter(String givenText) {
 		//TODO Remove unicode tab character from given text then return.
 		return "";
 	}
@@ -369,7 +369,7 @@ public class StatisticRetrieval {
 	private String fixTabs(String givenText) {
 		givenText = givenText.replace("\u0009", "");
 		return givenText;
-	}
+	}*/
 	
 	private String fixSpaces(String givenText) {
 		givenText = givenText.replaceAll(" ", "");
